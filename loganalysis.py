@@ -7,12 +7,20 @@ DBNAME = "news"
 def execute_query(query):
     """ Set the connection to the database and execute the query passed
     in query parameter"""
-    db = psycopg2.connect('dbname=' + DBNAME)
-    c = db.cursor()
-    c.execute(query)
-    rows = c.fetchall()
-    db.close()
-    return rows
+    try:
+        db = psycopg2.connect('dbname=' + DBNAME)
+        c = db.cursor()
+        c.execute(query)
+        rows = c.fetchall()
+        db.close()
+        return rows
+    except psycopg2.Error as e:
+        print "Unable to connect!"
+        print e.pgerror
+        print e.diag.message_detail
+        sys.exit(1)
+    else:
+        print "Connected!"
 
 
 def top_articles_views():
